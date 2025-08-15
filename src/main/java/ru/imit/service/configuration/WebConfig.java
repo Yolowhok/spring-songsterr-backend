@@ -53,17 +53,11 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**") // Разрешить CORS для всех маршрутов
-                .allowedOrigins("http://localhost:5173") // Разрешить только с этого источника
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Разрешить методы
-                .allowedHeaders("*") // Разрешить все заголовки
-                .allowCredentials(true); // Разрешить отправку учетных данных
-        registry.addMapping("/**") // Разрешить CORS для всех маршрутов
-                .allowedOrigins("http://localhost:5174") // Разрешить только с этого источника
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Разрешить методы
-                .allowedHeaders("*") // Разрешить все заголовки
-                .allowCredentials(true); // Разрешить отправку учетных данных
-
+        registry.addMapping("/**")
+//                .allowedOrigins("http://localhost:5173", "http://localhost:5174", "https://school-beta.ru.tuna.am")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true);
     }
 
     @Override

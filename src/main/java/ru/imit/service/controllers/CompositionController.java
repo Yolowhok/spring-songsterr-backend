@@ -2,6 +2,8 @@ package ru.imit.service.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.imit.service.dto.CompositionDTO;
@@ -44,6 +46,7 @@ public class CompositionController {
         } else {
             return ResponseEntity.notFound().build();
         }
+
     }
     /**
      * Возвращает список всех Composition без вложенных объектов
@@ -51,6 +54,7 @@ public class CompositionController {
     @GetMapping("/compositions")
     public ResponseEntity<List<CompositionDTO>> getAllOnlyCompositions() {
         Optional<List<CompositionDTO>> compositions = compositionService.getAllOnlyComposition();
+
         if (compositions.isPresent()) {
             return ResponseEntity.ok(compositions.get());
         } else {
@@ -74,7 +78,8 @@ public class CompositionController {
      * */
     @PostMapping("/composition/create")
     public ResponseEntity<Composition> createComposition(@RequestBody Composition composition) {
-        Optional<Composition> compositionOptional = compositionService.saveComposition(composition);
+        System.out.println(composition);
+        Optional<Composition> compositionOptional = compositionService.createNewComposition(composition);
         if (compositionOptional.isPresent()) {
             return ResponseEntity.ok(compositionOptional.get());
         } else {
@@ -102,6 +107,17 @@ public class CompositionController {
             return ResponseEntity.ok(compositionOptional.get());
         } else {
             return ResponseEntity.badRequest().build();
+        }
+    }
+    @PostMapping("/composition/delete/{id}")
+    public ResponseEntity<Void> deleteComposition(@PathVariable Long id) {
+        try {
+            compositionService.deleteComposition(id);
+            return ResponseEntity.noContent().build();  // 204 No Content - стандартный ответ для успешного удаления
+        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.notFound().build();   // 404 Not Found - если объект не найден
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build(); // 500 - при других ошибках
         }
     }
 }
