@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.imit.service.models.BeatNote;
 import ru.imit.service.repositories.BeatNoteRepository;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Service
@@ -15,7 +15,7 @@ public class BeatNoteService {
 
     public Optional<BeatNote> getBeatNoteById(Long id) {
         try {
-            return Optional.ofNullable(beatNoteRepository.getOne(id));
+            return Optional.ofNullable(beatNoteRepository.getReferenceById(id));
         } catch(EntityNotFoundException e) {
             return Optional.empty();
         }

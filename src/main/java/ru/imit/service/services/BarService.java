@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.imit.service.models.Bar;
 import ru.imit.service.repositories.BarRepository;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Service
@@ -15,7 +15,7 @@ public class BarService {
 
     Optional<Bar> getBarById(Long id) {
         try {
-            return Optional.ofNullable(barRepository.getOne(id));
+            return barRepository.findById(id);
         } catch (EntityNotFoundException e) {
             return Optional.empty();
         }

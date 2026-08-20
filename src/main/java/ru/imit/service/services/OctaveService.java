@@ -6,7 +6,7 @@ import ru.imit.service.enums.OctaveType;
 import ru.imit.service.models.Octave;
 import ru.imit.service.repositories.OctaveRepository;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +17,7 @@ public class OctaveService {
 
     public Optional<Octave> getOctaveById(Long id) {
         try {
-            return Optional.ofNullable(octaveRepository.getOne(id));
+            return Optional.ofNullable(octaveRepository.getReferenceById(id));
         } catch (EntityNotFoundException e) {
             return Optional.empty();
         }

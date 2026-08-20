@@ -12,7 +12,7 @@ import ru.imit.service.repositories.NoteRepository;
 import ru.imit.service.repositories.OctaveRepository;
 import ru.imit.service.services.*;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -94,7 +94,7 @@ public class CreateLinesSQL {
         bars.get(0).getBeats().get(0).getBeatNotes().add(BeatNote.builder()
                 .id(null)
                 .beat(bars.get(0).getBeats().get(0))
-                .noteOctave(noteOctaveRepository.getOne(7L))
+                .noteOctave(noteOctaveRepository.getReferenceById(7L))
                 .build());
 
         return notesheetService.saveNotesheet(notesheet).get();

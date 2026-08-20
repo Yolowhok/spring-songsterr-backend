@@ -3,7 +3,7 @@ package ru.imit.service.dto;
 import lombok.*;
 import ru.imit.service.models.Notesheet;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.sql.Date;
 import java.util.List;
 

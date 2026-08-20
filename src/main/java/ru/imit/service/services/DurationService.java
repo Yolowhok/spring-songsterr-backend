@@ -6,7 +6,7 @@ import ru.imit.service.enums.DurationType;
 import ru.imit.service.models.Duration;
 import ru.imit.service.repositories.DurationRepository;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +23,7 @@ public class DurationService {
     }
     public Optional<Duration> getDurationById(Long id) {
         try {
-            return Optional.ofNullable(durationRepository.getOne(id));
+            return Optional.ofNullable(durationRepository.getReferenceById(id));
         } catch (EntityNotFoundException e) {
             return Optional.empty();
         }

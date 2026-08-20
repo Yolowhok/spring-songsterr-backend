@@ -10,7 +10,7 @@ import ru.imit.service.models.*;
 import ru.imit.service.repositories.CompositionRepository;
 import ru.imit.service.repositories.NotesheetRepository;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +25,13 @@ public class NotesheetService {
     @Autowired TimeSignatureService timeSignatureService;
     public Optional<Notesheet> getNotesheetById(Long id) {
         try {
-            return Optional.ofNullable(notesheetRepository.findOne(id));
+            return notesheetRepository.findById(id);
         } catch (EntityNotFoundException e) {
             return Optional.empty();
         }
     }
     public Optional<Notesheet> updateNotesheet(Notesheet notesheet) {
-        notesheet.setComposition(notesheetRepository.getOne(notesheet.getId()).getComposition());
+        notesheet.setComposition(notesheetRepository.getReferenceById(notesheet.getId()).getComposition());
         notesheetRepository.save(notesheet);
         return Optional.ofNullable(notesheetRepository.saveAndFlush(notesheet));
     }
@@ -61,10 +61,10 @@ public class NotesheetService {
 
     }
     public void deleteNotesheet(Long id) {
-        if (!notesheetRepository.exists(id)) {
+        if (!notesheetRepository.existsById(id)) {
             throw new EntityNotFoundException("Notesheet with id " + id + " not found");
         }
-        notesheetRepository.delete(id);
+        notesheetRepository.deleteById(id);
     }
 
     @Transactional
@@ -73,7 +73,7 @@ public class NotesheetService {
             Tuning tuning = notesheetCreateDTO.getTuning();
             Instrument instrument = notesheetCreateDTO.getInstrument();
             Long compositionID = notesheetCreateDTO.getCompositionID();
-            Composition composition = compositionRepository.getOne(compositionID);
+            Composition composition = compositionRepository.getReferenceById(compositionID);
             Notesheet notesheet = Notesheet.builder()
                     .tuning(tuning)
                     .instrument(instrument)

@@ -6,7 +6,7 @@ import ru.imit.service.enums.NoteType;
 import ru.imit.service.models.Note;
 import ru.imit.service.repositories.NoteRepository;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +17,7 @@ public class NoteService {
 
     public Optional<Note> getNoteById(Long id) {
         try {
-            return Optional.ofNullable(noteRepository.getOne(id));
+            return Optional.ofNullable(noteRepository.getReferenceById(id));
         } catch (EntityNotFoundException e) {
             return Optional.empty();
         }

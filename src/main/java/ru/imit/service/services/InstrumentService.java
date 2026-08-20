@@ -6,7 +6,7 @@ import ru.imit.service.enums.InstrumentType;
 import ru.imit.service.models.Instrument;
 import ru.imit.service.repositories.InstrumentRepository;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +31,7 @@ public class InstrumentService {
     }
     public Optional<Instrument> getInstrumentById(Integer id) {
         try {
-            return Optional.ofNullable(instrumentRepository.getOne(id));
+            return Optional.ofNullable(instrumentRepository.getReferenceById(id));
         } catch (EntityNotFoundException e) {
             return Optional.empty();
         }

@@ -9,7 +9,7 @@ import ru.imit.service.models.*;
 import ru.imit.service.repositories.CompositionRepository;
 import ru.imit.service.repositories.NotesheetRepository;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,11 +55,7 @@ public class CompositionService {
         }
     }
     public Optional<Composition> getFullCompositionById(Long id) {
-        try {
-            return Optional.ofNullable(compositionRepository.getOne(id));
-        } catch (EntityNotFoundException e) {
-            return Optional.empty();
-        }
+        return compositionRepository.findById(id);
     }
 
     public Optional<List<CompositionDTO>> getAllOnlyComposition() {
@@ -94,7 +90,7 @@ public class CompositionService {
         }
     }
     public Optional<Composition> updateComposition(Composition compositionUpdate) {
-        Composition composition = compositionRepository.getOne(compositionUpdate.getId());
+        Composition composition = compositionRepository.getReferenceById(compositionUpdate.getId());
 
 //        if (compositionUpdate.getNotesheets() == null) {
 //            compositionUpdate.setNotesheets(new ArrayList<>());
@@ -147,7 +143,7 @@ public class CompositionService {
     @Transactional
     public void deleteComposition(Long id) {
         // Каскадное удаление должно быть настроено в Entity
-        Composition composition = Optional.of(compositionRepository.findOne(id))
+        Composition composition = compositionRepository.findById(id)
                 .orElseThrow(() -> new EmptyResultDataAccessException("Composition not found with id: " + id, 1));
 
         compositionRepository.delete(composition);

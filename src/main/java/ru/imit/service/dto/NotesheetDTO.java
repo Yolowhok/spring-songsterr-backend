@@ -7,7 +7,7 @@ import ru.imit.service.models.Composition;
 import ru.imit.service.models.Instrument;
 import ru.imit.service.models.Tuning;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.sql.Date;
 import java.util.List;
 

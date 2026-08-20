@@ -3,7 +3,7 @@ package ru.imit.service.models;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Data
 @AllArgsConstructor

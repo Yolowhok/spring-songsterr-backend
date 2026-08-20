@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.imit.service.models.NoteOctave;
 import ru.imit.service.repositories.NoteOctaveRepository;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 

@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 import ru.imit.service.models.TimeSignature;
 import ru.imit.service.repositories.TimeSignatureRepository;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-import javax.validation.ConstraintViolationException;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +20,7 @@ public class TimeSignatureService {
 
     public Optional<TimeSignature> getTimeSignatureById(Long id) {
         try {
-            return Optional.ofNullable(timeSignatureRepository.getOne(id));
+            return Optional.ofNullable(timeSignatureRepository.getReferenceById(id));
         } catch (EntityExistsException e) {
             return Optional.empty();
         }
