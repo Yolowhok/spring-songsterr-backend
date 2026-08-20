@@ -3,6 +3,7 @@ package ru.imit.service.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.imit.service.dto.NotesheetCreateDTO;
 import ru.imit.service.dto.NotesheetDTO;
 import ru.imit.service.models.Bar;
 import ru.imit.service.models.Beat;
@@ -79,10 +80,17 @@ public class NotesheetController {
     }
     @PostMapping("/notesheet/delete")
     public ResponseEntity<Notesheet> postNotesheetDelete(@RequestBody Long id) {
-        //Устанавливаем обратную связь для Bar, Beat и BeatNotes
-
         notesheetService.deleteNotesheet(id);
         return ResponseEntity.ok().build();
+    }
+    @PostMapping("/notesheet/create")
+    public ResponseEntity<Notesheet> postNotesheetCreate(@RequestBody NotesheetCreateDTO notesheetCreateDTO) {
+        Optional<Notesheet> notesheet = notesheetService.createNotesheet(notesheetCreateDTO);
+        if (notesheet.isPresent()) {
+            return ResponseEntity.ok(notesheet.get());
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 

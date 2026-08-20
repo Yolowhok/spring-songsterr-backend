@@ -2,12 +2,16 @@ package ru.imit.service.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionException;
+import org.springframework.transaction.annotation.Transactional;
+import ru.imit.service.dto.NotesheetCreateDTO;
 import ru.imit.service.dto.NotesheetDTO;
-import ru.imit.service.models.Notesheet;
+import ru.imit.service.models.*;
 import ru.imit.service.repositories.CompositionRepository;
 import ru.imit.service.repositories.NotesheetRepository;
 
 import javax.persistence.EntityNotFoundException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +22,7 @@ public class NotesheetService {
     private NotesheetRepository notesheetRepository;
     @Autowired
     private CompositionRepository compositionRepository;
+    @Autowired TimeSignatureService timeSignatureService;
     public Optional<Notesheet> getNotesheetById(Long id) {
         try {
             return Optional.ofNullable(notesheetRepository.findOne(id));
@@ -56,9 +61,38 @@ public class NotesheetService {
 
     }
     public void deleteNotesheet(Long id) {
-        if (notesheetRepository.exists(id)) {
+        if (!notesheetRepository.exists(id)) {
             throw new EntityNotFoundException("Notesheet with id " + id + " not found");
         }
         notesheetRepository.delete(id);
+    }
+
+    @Transactional
+    public Optional<Notesheet> createNotesheet(NotesheetCreateDTO notesheetCreateDTO) {
+        try {
+            Tuning tuning = notesheetCreateDTO.getTuning();
+            Instrument instrument = notesheetCreateDTO.getInstrument();
+            Long compositionID = notesheetCreateDTO.getCompositionID();
+            System.out.println(compositionID);
+            Composition composition = compositionRepository.getOne(compositionID);
+            Notesheet notesheet = Notesheet.builder()
+                    .tuning(tuning)
+                    .instrument(instrument)
+                    .composition(composition)
+                    .build();
+            TimeSignature timeSignature = timeSignatureService.getTimeSignatureById(3L).get();
+
+            Bar bar = Bar.builder()
+                    .notesheet(notesheet)
+                    .orderIndex(1)
+                    .tempInBpm(120)
+                    .timeSignature(timeSignature).build();
+            notesheet.setBars(List.of(bar));
+            Notesheet newNotesheet = notesheetRepository.save(notesheet);
+            return Optional.of(newNotesheet);
+
+        } catch (TransactionException e) {
+            return Optional.empty();
+        }
     }
 }
