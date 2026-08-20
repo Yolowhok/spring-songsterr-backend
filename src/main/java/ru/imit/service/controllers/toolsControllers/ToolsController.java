@@ -1,7 +1,7 @@
 package ru.imit.service.controllers.toolsControllers;
 
-import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@Profile("tools")
 public class ToolsController {
     @Autowired
     CreateLinesSQL createLinesSQL;

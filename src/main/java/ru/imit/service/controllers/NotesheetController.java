@@ -41,7 +41,6 @@ public class NotesheetController {
     public ResponseEntity<Notesheet> getNotesheetById(@PathVariable Long id) {
         Optional<Notesheet> optionalNotesheet = notesheetService.getNotesheetById(id);
         if (optionalNotesheet.isPresent()) {
-            System.out.println(optionalNotesheet.get());
             return ResponseEntity.ok(optionalNotesheet.get());
         } else {
             return ResponseEntity.notFound().build();
@@ -74,7 +73,6 @@ public class NotesheetController {
                 }
             }
         }
-        System.out.println("CHECK NOTESHEET \n" + notesheet);
         notesheetService.updateNotesheet(notesheet);
         return ResponseEntity.ok().build();
     }

@@ -73,7 +73,6 @@ public class NotesheetService {
             Tuning tuning = notesheetCreateDTO.getTuning();
             Instrument instrument = notesheetCreateDTO.getInstrument();
             Long compositionID = notesheetCreateDTO.getCompositionID();
-            System.out.println(compositionID);
             Composition composition = compositionRepository.getOne(compositionID);
             Notesheet notesheet = Notesheet.builder()
                     .tuning(tuning)

@@ -78,7 +78,6 @@ public class CompositionController {
      * */
     @PostMapping("/composition/create")
     public ResponseEntity<Composition> createComposition(@RequestBody Composition composition) {
-        System.out.println(composition);
         Optional<Composition> compositionOptional = compositionService.createNewComposition(composition);
         if (compositionOptional.isPresent()) {
             return ResponseEntity.ok(compositionOptional.get());
@@ -91,7 +90,6 @@ public class CompositionController {
      * */
     @PostMapping("/composition/update")
     public ResponseEntity<Composition> updateComposition(@RequestBody Composition composition) {
-        System.out.println(composition);
         Optional<Composition> compositionOptional = compositionService.updateComposition(composition);
         if (compositionOptional.isPresent()) {
             return ResponseEntity.ok(compositionOptional.get());
@@ -101,7 +99,6 @@ public class CompositionController {
     }
     @PostMapping("/composition/save")
     public ResponseEntity<Composition> saveComposition(@RequestBody Composition composition) {
-        System.out.println(composition);
         Optional<Composition> compositionOptional = compositionService.updateComposition(composition);
         if (compositionOptional.isPresent()) {
             return ResponseEntity.ok(compositionOptional.get());
