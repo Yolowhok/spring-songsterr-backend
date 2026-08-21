@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "beat_note")
@@ -32,9 +31,16 @@ public class BeatNote {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id")
     Position position;
-//    @OneToMany(mappedBy = "beat", cascade = CascadeType.REMOVE, orphanRemoval = true)
-//    List<NoteOctave> noteOctave;
 
+    @Builder.Default
+    @Column(name = "tied", nullable = false)
+    Boolean tied = false;
 
+    /** hammer | pull | slide_up | slide_down | bend */
+    @Column(name = "technique", length = 32)
+    String technique;
 
+    /** half | full — only for bend */
+    @Column(name = "bend_value", length = 16)
+    String bendValue;
 }

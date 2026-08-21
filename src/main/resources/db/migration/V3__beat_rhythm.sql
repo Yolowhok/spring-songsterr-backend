@@ -1,0 +1,9 @@
+-- Rhythm flags on beat + articulations on beat_note
+ALTER TABLE beat ADD COLUMN dotted BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE beat ADD COLUMN rest BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE beat ADD COLUMN tuplet_num INTEGER NULL;
+ALTER TABLE beat ADD COLUMN tuplet_den INTEGER NULL;
+
+ALTER TABLE beat_note ADD COLUMN tied BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE beat_note ADD COLUMN technique VARCHAR(32) NULL;
+ALTER TABLE beat_note ADD COLUMN bend_value VARCHAR(16) NULL;

@@ -32,6 +32,20 @@ public class Beat {
     @Column(name = "order_index")
     Integer orderIndex;
 
+    @Builder.Default
+    @Column(name = "dotted", nullable = false)
+    Boolean dotted = false;
+
+    @Builder.Default
+    @Column(name = "rest", nullable = false)
+    Boolean rest = false;
+
+    @Column(name = "tuplet_num")
+    Integer tupletNum;
+
+    @Column(name = "tuplet_den")
+    Integer tupletDen;
+
     @OneToMany(mappedBy = "beat", cascade = CascadeType.ALL, orphanRemoval = true)
     List<BeatNote> beatNotes;
 }

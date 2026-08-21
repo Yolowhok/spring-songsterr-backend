@@ -72,6 +72,8 @@ public class NotesheetEditUseCase {
                 .bar(newBar)
                 .orderIndex(1)
                 .duration(duration)
+                .dotted(false)
+                .rest(false)
                 .beatNotes(new ArrayList<>())
                 .build();
         newBar.getBeats().add(defaultBeat);
@@ -132,6 +134,16 @@ public class NotesheetEditUseCase {
             beat.setDuration(durationService.getDurationById(DEFAULT_DURATION_ID).orElseThrow());
         }
 
+        if (payload != null) {
+            beat.setDotted(Boolean.TRUE.equals(payload.getDotted()));
+            beat.setRest(Boolean.TRUE.equals(payload.getRest()));
+            beat.setTupletNum(payload.getTupletNum());
+            beat.setTupletDen(payload.getTupletDen());
+        } else {
+            if (beat.getDotted() == null) beat.setDotted(false);
+            if (beat.getRest() == null) beat.setRest(false);
+        }
+
         if (beat.getBeatNotes() == null) {
             beat.setBeatNotes(new ArrayList<>());
         } else {
@@ -143,6 +155,9 @@ public class NotesheetEditUseCase {
                         .beat(beat)
                         .noteOctave(bn.getNoteOctave())
                         .position(bn.getPosition())
+                        .tied(Boolean.TRUE.equals(bn.getTied()))
+                        .technique(bn.getTechnique())
+                        .bendValue(bn.getBendValue())
                         .build();
                 beat.getBeatNotes().add(copy);
             }
@@ -174,6 +189,8 @@ public class NotesheetEditUseCase {
                 .bar(bar)
                 .orderIndex(newOrder)
                 .duration(duration)
+                .dotted(false)
+                .rest(false)
                 .beatNotes(new ArrayList<>())
                 .build();
         bar.getBeats().add(newBeat);
