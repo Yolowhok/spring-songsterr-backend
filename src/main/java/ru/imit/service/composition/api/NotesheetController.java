@@ -1,5 +1,7 @@
 package ru.imit.service.composition.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,8 @@ import java.util.List;
 
 @RestController
 public class NotesheetController {
+
+    private static final Logger log = LoggerFactory.getLogger(NotesheetController.class);
 
     @Autowired
     private NotesheetUseCase notesheetUseCase;
@@ -92,7 +96,13 @@ public class NotesheetController {
             return ResponseEntity.ok(
                     notesheetEditUseCase.upsertBeat(id, notesheetId, barOrder, beatOrder, beat));
         } catch (EmptyResultDataAccessException e) {
+            log.warn("upsertBeat not found composition={} notesheet={} bar={} beat={}",
+                    id, notesheetId, barOrder, beatOrder);
             return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            log.error("upsertBeat failed composition={} notesheet={} bar={} beat={}",
+                    id, notesheetId, barOrder, beatOrder, e);
+            throw e;
         }
     }
 

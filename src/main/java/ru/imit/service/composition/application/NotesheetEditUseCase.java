@@ -128,29 +128,62 @@ public class NotesheetEditUseCase {
         }
 
         if (payload != null && payload.getDuration() != null && payload.getDuration().getId() != null) {
-            Duration duration = durationService.getDurationById(payload.getDuration().getId()).orElseThrow();
+            Duration duration = durationService.getDurationById(payload.getDuration().getId())
+                    .orElseThrow(() -> new EmptyResultDataAccessException(
+                            "Duration not found: " + payload.getDuration().getId(), 1));
             beat.setDuration(duration);
         } else if (beat.getDuration() == null) {
-            beat.setDuration(durationService.getDurationById(DEFAULT_DURATION_ID).orElseThrow());
+            beat.setDuration(durationService.getDurationById(DEFAULT_DURATION_ID)
+                    .orElseThrow(() -> new EmptyResultDataAccessException(
+                            "Default duration not found: " + DEFAULT_DURATION_ID, 1)));
         }
+
+        if (beat.getDotted() == null) beat.setDotted(false);
+        if (beat.getRest() == null) beat.setRest(false);
 
         if (payload != null) {
             beat.setDotted(Boolean.TRUE.equals(payload.getDotted()));
             beat.setRest(Boolean.TRUE.equals(payload.getRest()));
             beat.setTupletNum(payload.getTupletNum());
             beat.setTupletDen(payload.getTupletDen());
-        } else {
-            if (beat.getDotted() == null) beat.setDotted(false);
-            if (beat.getRest() == null) beat.setRest(false);
         }
 
         if (beat.getBeatNotes() == null) {
             beat.setBeatNotes(new ArrayList<>());
-        } else {
-            beat.getBeatNotes().clear();
         }
-        if (payload != null && payload.getBeatNotes() != null) {
-            for (BeatNote bn : payload.getBeatNotes()) {
+        replaceBeatNotesPreservingIds(beat, payload != null ? payload.getBeatNotes() : null);
+
+        return notesheetRepository.saveAndFlush(notesheet);
+    }
+
+    /**
+     * Update beat notes in place by guitar string so existing rows keep their id
+     * (avoids orphan-delete + insert churn and FK surprises).
+     */
+    private void replaceBeatNotesPreservingIds(Beat beat, List<BeatNote> incoming) {
+        List<BeatNote> existing = beat.getBeatNotes();
+        if (incoming == null || incoming.isEmpty()) {
+            existing.clear();
+            return;
+        }
+
+        List<BeatNote> kept = new ArrayList<>();
+        for (BeatNote bn : incoming) {
+            if (bn == null || bn.getPosition() == null) continue;
+            Integer string = bn.getPosition().getString();
+            BeatNote match = existing.stream()
+                    .filter(e -> e.getPosition() != null
+                            && Objects.equals(e.getPosition().getString(), string))
+                    .findFirst()
+                    .orElse(null);
+            if (match != null) {
+                match.setNoteOctave(bn.getNoteOctave());
+                match.setPosition(bn.getPosition());
+                match.setTied(Boolean.TRUE.equals(bn.getTied()));
+                match.setTechnique(bn.getTechnique());
+                match.setBendValue(bn.getBendValue());
+                kept.add(match);
+            } else {
                 BeatNote copy = BeatNote.builder()
                         .beat(beat)
                         .noteOctave(bn.getNoteOctave())
@@ -159,11 +192,11 @@ public class NotesheetEditUseCase {
                         .technique(bn.getTechnique())
                         .bendValue(bn.getBendValue())
                         .build();
-                beat.getBeatNotes().add(copy);
+                kept.add(copy);
             }
         }
-
-        return notesheetRepository.saveAndFlush(notesheet);
+        existing.clear();
+        existing.addAll(kept);
     }
 
     @Transactional
